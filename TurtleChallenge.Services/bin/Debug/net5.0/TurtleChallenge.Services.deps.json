@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "TurtleChallenge.Services/1.0.0": {
+        "dependencies": {
+          "TurtleChallenge.Models": "1.0.0"
+        },
+        "runtime": {
+          "TurtleChallenge.Services.dll": {}
+        }
+      },
+      "TurtleChallenge.Models/1.0.0": {
+        "runtime": {
+          "TurtleChallenge.Models.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "TurtleChallenge.Services/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TurtleChallenge.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
