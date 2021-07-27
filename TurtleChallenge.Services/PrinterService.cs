@@ -4,16 +4,14 @@ using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
 {
+    /// <summary>
+    /// Responsive for printing to the console
+    /// </summary>
     public class PrinterService
     {
         private static PrinterService _printerService;
 
         private const string Sequence = "Sequence {number}";
-        private const string Dead = "Mine hit! The turtle is dead.";
-        private const string OutOfBounds = "Turtle left the board!";
-        private const string Danger = "The turtle is in danger!";
-        private const string NoWayOut = "The turtle didn't find the way out.";
-        private const string Success = "Success!";
         private const string Movement = "The turtle moved from ({fromX},{fromY}) to ({toX},{toY})";
 
         private PrinterService(){}
@@ -23,11 +21,20 @@ namespace TurtleChallenge.Services
             return _printerService ?? (_printerService = new PrinterService());
         }
 
+        /// <summary>
+        /// Prints a sequence number
+        /// </summary>
+        /// <param name="number"></param>
         public void PrintSequence(int number)
         {
             Console.WriteLine(Sequence.Replace("{number}",number.ToString()));
         }
 
+        /// <summary>
+        /// Prints the movement of the turtle
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="newPosition"></param>
         public void PrintPositionMovement(Cell position, Cell newPosition)
         {
             Console.WriteLine(Movement.Replace("{fromX}",position.x.ToString())
@@ -37,48 +44,22 @@ namespace TurtleChallenge.Services
             ResetToDefaultColor();
         }
 
+        /// <summary>
+        /// Generic printing depending on the argument
+        /// </summary>
+        /// <param name="text"></param>
         public void Print (string text)
         {
             Console.WriteLine(text);
             ResetToDefaultColor();
         }
-
+        
+        /// <summary>
+        /// Resets the color of printing test to white
+        /// </summary>
         private void ResetToDefaultColor()
         {
             Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        //public void PrintSuccess()
-        //{
-        //    Console.ForegroundColor = ConsoleColor.Green;
-        //    Console.WriteLine(Success);
-        //    ResetToDefaultColor();
-        //}
-
-        //public void PrintDanger()
-        //{
-        //    Console.ForegroundColor = ConsoleColor.Yellow;
-        //    Console.WriteLine(Danger);
-        //    ResetToDefaultColor();
-        //}
-
-        //public void PrintOutOfBounds()
-        //{
-        //    Console.ForegroundColor = ConsoleColor.Red;
-        //    Console.WriteLine(OutOfBounds);
-        //    ResetToDefaultColor();
-        //}
-
-        //public void PrintDead()
-        //{
-        //    Console.ForegroundColor = ConsoleColor.Red;
-        //    Console.WriteLine(Dead);
-        //    ResetToDefaultColor();
-        //}
-
-        public void PrintNoWayOut()
-        {
-            Console.WriteLine(NoWayOut);
         }
     }
 }

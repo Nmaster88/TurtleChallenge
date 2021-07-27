@@ -10,9 +10,9 @@ namespace TurtleChallenge.Models
     /// </summary>
     public class Element : IElement
     {
-        public Cell Position { get; set; }
-
         private List<IElementObserver> _observers = new List<IElementObserver>();
+
+        public Cell Position { get; set; }
 
         public void Attach(IElementObserver observer)
         {

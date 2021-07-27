@@ -5,6 +5,10 @@ using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
 {
+    /// <summary>
+    /// Responsible for reading  the information on both moves and settings file
+    /// assigns both information to correspondent data structures
+    /// </summary>
     public class FileReaderService
     {
         private static FileReaderService _fileReader;

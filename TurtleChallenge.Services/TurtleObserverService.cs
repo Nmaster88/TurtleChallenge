@@ -4,6 +4,10 @@ using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
 {
+    /// <summary>
+    /// turtle observer service 
+    /// update method is called by the element it observes.
+    /// </summary>
     public class TurtleObserverService : IElementObserver
     {
         private Board _board;
@@ -11,18 +15,31 @@ namespace TurtleChallenge.Services
         public TurtleState GetLastElementState { get; set; } = new TurtleOkState();
         public Cell GetLastElementPosition { get; set; }
 
-        public void ResetObserver(Cell Position)
+        /// <summary>
+        /// Reset the Properties that contain the state and position to
+        /// values passed by argument
+        /// </summary>
+        /// <param name="Position"></param>
+        /// <param name="State"></param>
+        public void ResetObserver(Cell Position, TurtleState State)
         {
-            GetLastElementState = new TurtleOkState();
+            GetLastElementState = State;
             GetLastElementPosition = Position;
         }
 
+        /// <summary>
+        /// Calls no way out text
+        /// </summary>
         public void NoWayOut()
         {
             GetLastElementState = new TurtleNoWayOutState();
             _printerService.Print(GetLastElementState.Text());
         }
 
+        /// <summary>
+        /// boolean where value depends if the turtle is alive.
+        /// </summary>
+        /// <returns></returns>
         public bool IsAlive()
         {
             return GetLastElementState.GetType() == typeof(TurtleDangerState) || GetLastElementState.GetType() == typeof(TurtleOkState);
@@ -35,6 +52,10 @@ namespace TurtleChallenge.Services
             GetLastElementPosition = board.turtle.Position;
         }
 
+        /// <summary>
+        /// Update method that is called by the an Element is being observed.
+        /// </summary>
+        /// <param name="element"></param>
         public void Update(IElement element)
         {
             if(GetLastElementPosition != element.Position)
@@ -48,6 +69,11 @@ namespace TurtleChallenge.Services
             _printerService.Print(GetLastElementState.Text());
         }
 
+        /// <summary>
+        /// Depending on the position of the element (turtle) a state will be returned
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private TurtleState CheckElementState(IElement element)
         {
             if (IsExit(element)) return new TurtleExitState();
@@ -59,6 +85,11 @@ namespace TurtleChallenge.Services
             return new TurtleOkState();
         }
 
+        /// <summary>
+        /// If the turtle is in danger, near a mine
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private bool IsDanger(IElement element)
         {
             foreach(var mine in _board.Mines)
@@ -73,6 +104,11 @@ namespace TurtleChallenge.Services
             return false;
         }
 
+        /// <summary>
+        /// If the turtle is out of the board
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private bool IsOutOfBounds(IElement element)
         {
             if (element.Position.x < 0 || element.Position.x >= _board.grid.width) return true;
@@ -80,6 +116,11 @@ namespace TurtleChallenge.Services
             return false;
         }
 
+        /// <summary>
+        /// If the turtle is dead, because it stepped on a mine
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private bool IsDead(IElement element)
         {
             foreach (var mine in _board.Mines)
@@ -89,6 +130,11 @@ namespace TurtleChallenge.Services
             return false;
         }
 
+        /// <summary>
+        /// If the turtle is in the Exit element
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         private bool IsExit(IElement element)
         {
             if (element.Position.x == _board.Exit.Position.x && element.Position.y == _board.Exit.Position.y) return true;
