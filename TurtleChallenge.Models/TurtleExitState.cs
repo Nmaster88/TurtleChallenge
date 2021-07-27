@@ -2,6 +2,9 @@
 
 namespace TurtleChallenge.Models
 {
+    /// <summary>
+    /// State for turtle when it exits
+    /// </summary>
     public class TurtleExitState : TurtleState
     {
         public override string Text() {

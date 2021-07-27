@@ -2,6 +2,9 @@
 
 namespace TurtleChallenge.Models
 {
+    /// <summary>
+    /// Turtle is the element that moves on the board.
+    /// </summary>
     public class Turtle : Element
     {
         private static Turtle _turtle;
@@ -74,6 +77,4 @@ namespace TurtleChallenge.Models
     }
 
     public enum Dir { NORTH, SOUTH, EAST, WEST }
-
-    //public enum ElementState { IsDead, IsExit, IsOutOfBounds, IsDanger, IsOk
 }

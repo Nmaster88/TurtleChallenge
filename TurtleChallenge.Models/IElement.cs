@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TurtleChallenge.Models
 {
+    /// <summary>
+    /// IElement interface, has a Cell position property and the methods for any class that inherits this to be observable
+    /// by another class that implements the IElementObserver interface
+    /// </summary>
     public interface IElement
     {
         Cell Position { get; set; }

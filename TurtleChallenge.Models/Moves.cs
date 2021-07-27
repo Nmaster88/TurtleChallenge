@@ -3,16 +3,15 @@ using System.Collections.Generic;
 
 namespace TurtleChallenge.Models
 {
+    /// <summary>
+    /// Moves is an object that contains the sequences for movements and rotating of turtle element.
+    /// </summary>
     public class Moves
     {
         private static Moves _moves;
 
         private List<string[]> _sequences;
 
-        //public Moves()
-        //{
-        //    _sequences = new List<string[]>();
-        //}
         private Moves()
         {
             _sequences = new List<string[]>();

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace TurtleChallenge.Models
 {
+    /// <summary>
+    /// Board of the game, with all related properties.
+    /// </summary>
     public class Board
     {
         public Grid grid { get; set; }
