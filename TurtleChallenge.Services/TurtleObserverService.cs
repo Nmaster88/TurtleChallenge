@@ -26,7 +26,7 @@ namespace TurtleChallenge.Services
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private TurtleState CheckElementState(IElement element)
+        private TurtleState CheckElementState(Element element)
         {
             if (IsExit(element)) return new TurtleExitState();
             else if (IsDead(element)) return new TurtleDeadState();
@@ -42,7 +42,7 @@ namespace TurtleChallenge.Services
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private bool IsDanger(IElement element)
+        private bool IsDanger(Element element)
         {
             foreach(var mine in _board.Mines)
             {
@@ -61,7 +61,7 @@ namespace TurtleChallenge.Services
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private bool IsOutOfBounds(IElement element)
+        private bool IsOutOfBounds(Element element)
         {
             if (element.Position.x < 0 || element.Position.x >= _board.grid.width) return true;
             if (element.Position.y < 0 || element.Position.y >= _board.grid.height) return true;
@@ -73,7 +73,7 @@ namespace TurtleChallenge.Services
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private bool IsDead(IElement element)
+        private bool IsDead(Element element)
         {
             foreach (var mine in _board.Mines)
             {
@@ -87,7 +87,7 @@ namespace TurtleChallenge.Services
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>
-        private bool IsExit(IElement element)
+        private bool IsExit(Element element)
         {
             if (element.Position.x == _board.Exit.Position.x && element.Position.y == _board.Exit.Position.y) return true;
             return false;

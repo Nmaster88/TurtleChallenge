@@ -40,11 +40,6 @@ namespace TurtleChallenge.Models
             return _turtle ?? (_turtle = new Turtle(position, direction));
         }
 
-        //public void ChangeTurtleState(TurtleState state)
-        //{
-        //    TurtleState = state;
-        //}
-
         public void ResetTurtle()
         {
             Position = InitialElementPosition;
@@ -78,8 +73,6 @@ namespace TurtleChallenge.Models
                     Position = new Cell { x = Position.x - 1, y = Position.y };
                     break;
             }
-
-            Notify();
         }
 
         /// <summary>
