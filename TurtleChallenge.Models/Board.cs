@@ -12,9 +12,9 @@ namespace TurtleChallenge.Models
         
         public Turtle turtle { get; set; }
         
-        public List<Mine> Mines { get; set; }
+        public List<Element> Mines { get; set; }
 
-        public Exit Exit { get; set; }
+        public Element Exit { get; set; }
     }
 
 }

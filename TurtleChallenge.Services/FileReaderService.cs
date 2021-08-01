@@ -81,10 +81,10 @@ namespace TurtleChallenge.Services
             }
             exitPosition.x = exitXPos;
             exitPosition.y = exitYPos;
-            board.Exit = new Exit();
+            board.Exit = new Element();
             board.Exit.Position = exitPosition;
 
-            board.Mines = new List<Mine>();
+            board.Mines = new List<Element>();
             for(int i=3; i<boardSettings.Length; i++)
             {
                 var board_mine = boardSettings[i].Split(",");
