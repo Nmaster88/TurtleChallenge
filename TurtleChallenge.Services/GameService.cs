@@ -11,25 +11,25 @@ namespace TurtleChallenge.Services
         private FileReaderService _fileReaderService;
         private PrinterService _printerService;
         private TurtleObserverService _turtleOserverService;
+        private TurtleObservable _turtleObservable;
         private Board _board;
-        private Cell _turtlePositionStart;
-        private Dir _turtleDirectionStart;
         private Moves _moves;
         private int counter=0;
         private string _moveSequencesFileName = "moves";
         private string _boardSettingsFileName = "settings";
+        private const string Sequence = "Sequence {number}";
 
         public GameService(string boardSettingsFileName, string moveSequencesFileName)
         {
             _boardSettingsFileName = boardSettingsFileName ?? boardSettingsFileName;
             _moveSequencesFileName = moveSequencesFileName ?? _moveSequencesFileName;
-            Initialize();
+            InitializeSettings();
         }
 
         /// <summary>
         /// Initializes some services and the board of the game
         /// </summary>
-        private void Initialize()
+        private void InitializeSettings()
         {
             _fileReaderService = FileReaderService.GetInstance();
             _printerService = PrinterService.GetInstance();
@@ -38,11 +38,9 @@ namespace TurtleChallenge.Services
 
             _board = _fileReaderService.GetBoardsettings(_boardSettingsFileName);
 
-            _turtlePositionStart = _board.turtle.Position;
-            _turtleDirectionStart = _board.turtle.Direction;
-
+            _turtleObservable = new TurtleObservable(_board.turtle);
             _turtleOserverService = new TurtleObserverService(_board, _printerService);
-            _board.turtle.Attach(_turtleOserverService);
+            _turtleOserverService.Subscribe(_turtleObservable);
         }
 
         /// <summary>
@@ -52,13 +50,19 @@ namespace TurtleChallenge.Services
         {
             foreach(var movesSequence in _moves.GetSequences())
             {
-                //restart turtle to initial position
-                _board.turtle.Position = _turtlePositionStart;
-                _board.turtle.Direction = _turtleDirectionStart;
-                _board.turtle.ChangeTurtleState(new TurtleOkState());
-                _turtleOserverService.ResetObserver(_turtlePositionStart, new TurtleOkState());
+                ResetToInitialValues();
                 ExecuteSequence(movesSequence);
             }
+        }
+
+        /// <summary>
+        /// Get sequence count text
+        /// </summary>
+        /// <param name="sequenceNumber"></param>
+        /// <returns></returns>
+        private string GetSequenceCountText(int sequenceNumber)
+        {
+            return Sequence.Replace("{number}", sequenceNumber.ToString());
         }
 
         /// <summary>
@@ -67,17 +71,30 @@ namespace TurtleChallenge.Services
         /// <param name="movesSequence"></param>
         private void ExecuteSequence(string[] movesSequence)
         {
-            _printerService.PrintSequence(++counter);
+            _printerService.Print(GetSequenceCountText(++counter));
+
             for (int i = 0; i < movesSequence.Length; i++)
             {
                 if (movesSequence[i] == "r") _board.turtle.Rotate();
                 else if (movesSequence[i] == "m") _board.turtle.Move();
 
-                if (!_turtleOserverService.IsAlive())
+                _turtleObservable.TrackTurtle(_board.turtle);
+
+                if (!_board.turtle.IsAlive())
                     return;
             }
 
-            _turtleOserverService.NoWayOut();
+            _board.turtle.TurtleState = new TurtleNoWayOutState();
+            _printerService.Print(_board.turtle.TurtleState.Text());
+        }
+
+        /// <summary>
+        /// We want to reset the board to its initial state
+        /// </summary>
+        private void ResetToInitialValues()
+        {
+            //restart turtle to initial position
+            _board.turtle.ResetTurtle();
         }
     }
 }

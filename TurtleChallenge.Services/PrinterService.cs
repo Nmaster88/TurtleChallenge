@@ -11,7 +11,7 @@ namespace TurtleChallenge.Services
     {
         private static PrinterService _printerService;
 
-        private const string Sequence = "Sequence {number}";
+        
         private const string Movement = "The turtle moved from ({fromX},{fromY}) to ({toX},{toY})";
 
         private PrinterService(){}
@@ -21,14 +21,14 @@ namespace TurtleChallenge.Services
             return _printerService ?? (_printerService = new PrinterService());
         }
 
-        /// <summary>
-        /// Prints a sequence number
-        /// </summary>
-        /// <param name="number"></param>
-        public void PrintSequence(int number)
-        {
-            Console.WriteLine(Sequence.Replace("{number}",number.ToString()));
-        }
+        ///// <summary>
+        ///// Prints a sequence number
+        ///// </summary>
+        ///// <param name="number"></param>
+        //public void PrintSequence(int number)
+        //{
+        //    Console.WriteLine(Sequence.Replace("{number}",number.ToString()));
+        //}
 
         /// <summary>
         /// Prints the movement of the turtle

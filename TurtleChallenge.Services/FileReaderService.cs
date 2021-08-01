@@ -66,8 +66,8 @@ namespace TurtleChallenge.Services
             position.x = turtleXPos;
             position.y = turtleYPos;
 
-            board.turtle = Turtle.GetInstance(position);
-            board.turtle.Direction = (Dir)Enum.Parse(typeof(Dir), board_turtle_settings[6],true);
+            board.turtle = Turtle.GetInstance(position, (Dir)Enum.Parse(typeof(Dir), board_turtle_settings[6], true));
+            //board.turtle.Direction = (Dir)Enum.Parse(typeof(Dir), board_turtle_settings[6],true);
 
             var board_turtle_exit = boardSettings[2].Split(",");
             Cell exitPosition = new Cell();

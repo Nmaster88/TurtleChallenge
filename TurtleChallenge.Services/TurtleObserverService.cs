@@ -8,65 +8,17 @@ namespace TurtleChallenge.Services
     /// turtle observer service 
     /// update method is called by the element it observes.
     /// </summary>
-    public class TurtleObserverService : IElementObserver
+    public class TurtleObserverService : IObserver<Turtle>
     {
+        private IDisposable unsubscriber;
         private Board _board;
         private PrinterService _printerService;
-        public TurtleState GetLastElementState { get; set; } = new TurtleOkState();
-        public Cell GetLastElementPosition { get; set; }
-
-        /// <summary>
-        /// Reset the Properties that contain the state and position to
-        /// values passed by argument
-        /// </summary>
-        /// <param name="Position"></param>
-        /// <param name="State"></param>
-        public void ResetObserver(Cell Position, TurtleState State)
-        {
-            GetLastElementState = State;
-            GetLastElementPosition = Position;
-        }
-
-        /// <summary>
-        /// Calls no way out text
-        /// </summary>
-        public void NoWayOut()
-        {
-            GetLastElementState = new TurtleNoWayOutState();
-            _printerService.Print(GetLastElementState.Text());
-        }
-
-        /// <summary>
-        /// boolean where value depends if the turtle is alive.
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAlive()
-        {
-            return GetLastElementState.GetType() == typeof(TurtleDangerState) || GetLastElementState.GetType() == typeof(TurtleOkState);
-        }
 
         public TurtleObserverService(Board board, PrinterService printerService)
         {
             _board = board;
             _printerService = printerService;
-            GetLastElementPosition = board.turtle.Position;
-        }
-
-        /// <summary>
-        /// Update method that is called by the an Element is being observed.
-        /// </summary>
-        /// <param name="element"></param>
-        public void Update(IElement element)
-        {
-            if(GetLastElementPosition != element.Position)
-            {
-                _printerService.PrintPositionMovement(GetLastElementPosition, element.Position);
-                GetLastElementPosition = element.Position;
-            }
-
-            GetLastElementState = CheckElementState(element);
-            _board.turtle.ChangeTurtleState(GetLastElementState);
-            _printerService.Print(GetLastElementState.Text());
+            _board.turtle.GetLastElementPosition = board.turtle.Position;
         }
 
         /// <summary>
@@ -139,6 +91,40 @@ namespace TurtleChallenge.Services
         {
             if (element.Position.x == _board.Exit.Position.x && element.Position.y == _board.Exit.Position.y) return true;
             return false;
+        }
+
+        public virtual void Subscribe(IObservable<Turtle> provider)
+        {
+            if (provider != null)
+                unsubscriber = provider.Subscribe(this);
+        }
+
+        public virtual void OnCompleted()
+        {
+            this.Unsubscribe();
+        }
+
+        public virtual void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void OnNext(Turtle value)
+        {
+            if (_board.turtle.GetLastElementPosition != value.Position)
+            {
+                _printerService.PrintPositionMovement(_board.turtle.GetLastElementPosition, value.Position);
+                _board.turtle.GetLastElementPosition = value.Position;
+            }
+
+            _board.turtle.GetLastElementState = CheckElementState(value);
+
+            _printerService.Print(_board.turtle.GetLastElementState.Text());
+        }
+
+        public virtual void Unsubscribe()
+        {
+            unsubscriber.Dispose();
         }
     }
 }

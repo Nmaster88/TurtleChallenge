@@ -4,3 +4,6 @@ TurtleChallenge.Models/obj
 TurtleChallenge.Models/bin
 TurtleChallenge.Console/obj
 TurtleChallenge.Console/bin
+TurtleChallenge.Console/.vs
+TurtleChallenge.Tests/obj
+TurtleChallenge.Tests/bin

@@ -7,22 +7,54 @@ namespace TurtleChallenge.Models
     /// </summary>
     public class Turtle : Element
     {
-        private static Turtle _turtle;
+        public TurtleState GetLastElementState { get; set; } = new TurtleOkState();
 
-        private Turtle(Cell position) { Position = position; }
+        public Cell GetLastElementPosition { get; set; }
 
-        public static Turtle GetInstance(Cell position)
-        {
-            return _turtle ?? (_turtle = new Turtle(position));
-        }
-        
+        public Dir GetLastDirection { get; set; }
+
+        private TurtleState InitialElementState { get; set; } = new TurtleOkState();
+
+        private Cell InitialElementPosition { get; set; }
+
+        private Dir InitialDirection { get; set; }
+
         public Dir Direction { get; set; }
 
         public TurtleState TurtleState { get; set; }
 
-        public void ChangeTurtleState(TurtleState state)
+        private static Turtle _turtle;
+
+        private Turtle(Cell position, Dir direction) { 
+            Position = position;
+            InitialElementPosition = position;
+            InitialElementState = new TurtleOkState();
+            InitialDirection = direction;
+            GetLastDirection = direction;
+            GetLastElementPosition = position;
+            GetLastElementState = new TurtleOkState();
+        }
+
+        public static Turtle GetInstance(Cell position, Dir direction)
         {
-            TurtleState = state;
+            return _turtle ?? (_turtle = new Turtle(position, direction));
+        }
+
+        //public void ChangeTurtleState(TurtleState state)
+        //{
+        //    TurtleState = state;
+        //}
+
+        public void ResetTurtle()
+        {
+            Position = InitialElementPosition;
+            Direction = InitialDirection;
+            TurtleState = new TurtleOkState();
+        }
+
+        public bool IsAlive()
+        {
+            return _turtle.GetLastElementState.GetType() == typeof(TurtleDangerState) || _turtle.GetLastElementState.GetType() == typeof(TurtleOkState);
         }
 
         /// <summary>
@@ -71,8 +103,6 @@ namespace TurtleChallenge.Models
                     Direction = Dir.NORTH;
                     break;
             }
-
-            //Notify();
         }
     }
 
