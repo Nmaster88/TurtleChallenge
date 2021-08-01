@@ -99,7 +99,7 @@ namespace TurtleChallenge.Services
                 }
                 minePosition.x = mineXPosition;
                 minePosition.y = mineYPosition;
-                Mine mine = new Mine();
+                Element mine = new Element();
                 mine.Position = minePosition;
                 board.Mines.Add(mine);
             }

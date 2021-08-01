@@ -27,11 +27,6 @@ namespace TurtleChallenge.Models
             _sequences.Add(sequence);
         }
 
-        public void AddSequences(List<string[]> sequences)
-        {
-            _sequences = sequences;
-        }
-
         public List<string[]> GetSequences()
         {
             return _sequences;
