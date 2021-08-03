@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
@@ -11,11 +12,17 @@ namespace TurtleChallenge.Services
     /// </summary>
     public class FileReaderService
     {
+        private readonly IFileSystem _fileSystem;
+
         private static FileReaderService _fileReader;
         private FileReaderService() { }
-        public static FileReaderService GetInstance()
+        private FileReaderService(IFileSystem fileSystem) 
         {
-            return _fileReader ?? (_fileReader = new FileReaderService());
+            _fileSystem = fileSystem ?? throw new ArgumentNullException();
+        }
+        public static FileReaderService GetInstance(IFileSystem fileSystem)
+        {
+            return _fileReader ?? (_fileReader = new FileReaderService(fileSystem));
         }
 
         private const string movesPath = "../../../../TurtleChallenge.Console/Files/{fileName}.csv";
@@ -24,7 +31,7 @@ namespace TurtleChallenge.Services
         public Moves GetMovesSequences(string fileName)
         {
             Moves MovesSequences = Moves.GetInstance();
-            var sequencesLines = File.ReadAllLines(movesPath.Replace("{fileName}",fileName));
+            var sequencesLines = _fileSystem.File.ReadAllLines(movesPath.Replace("{fileName}", fileName));
             for (int i = 0; i < sequencesLines.Length; i++)
             {
                 var moveSequence = sequencesLines[i].Split(",");
@@ -39,10 +46,10 @@ namespace TurtleChallenge.Services
             Board board = new Board();
             board.grid = new Grid();
 
-            string[] boardSettings = File.ReadAllLines(boardSettingsPath.Replace("{fileName}", fileName));
+            string[] boardSettings = _fileSystem.File.ReadAllLines(boardSettingsPath.Replace("{fileName}", fileName));
             var board_grid_settings = boardSettings[0].Split(",");
 
-            if(!int.TryParse(board_grid_settings[1], out int boardWidth))
+            if (!int.TryParse(board_grid_settings[1], out int boardWidth))
             {
                 throw new Exception();
             }
@@ -67,7 +74,6 @@ namespace TurtleChallenge.Services
             position.y = turtleYPos;
 
             board.turtle = Turtle.GetInstance(position, (Dir)Enum.Parse(typeof(Dir), board_turtle_settings[6], true));
-            //board.turtle.Direction = (Dir)Enum.Parse(typeof(Dir), board_turtle_settings[6],true);
 
             var board_turtle_exit = boardSettings[2].Split(",");
             Cell exitPosition = new Cell();
@@ -85,7 +91,7 @@ namespace TurtleChallenge.Services
             board.Exit.Position = exitPosition;
 
             board.Mines = new List<Element>();
-            for(int i=3; i<boardSettings.Length; i++)
+            for (int i = 3; i < boardSettings.Length; i++)
             {
                 var board_mine = boardSettings[i].Split(",");
                 Cell minePosition = new Cell();

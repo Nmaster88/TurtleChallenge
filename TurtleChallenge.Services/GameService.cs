@@ -1,4 +1,5 @@
-﻿using TurtleChallenge.Models;
+﻿using System.IO.Abstractions;
+using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
 {
@@ -31,7 +32,9 @@ namespace TurtleChallenge.Services
         /// </summary>
         private void InitializeSettings()
         {
-            _fileReaderService = FileReaderService.GetInstance();
+            FileSystem fileSytem = new FileSystem();
+
+            _fileReaderService = FileReaderService.GetInstance(fileSytem);
             _printerService = PrinterService.GetInstance();
 
             _moves = _fileReaderService.GetMovesSequences(_moveSequencesFileName);
@@ -80,11 +83,11 @@ namespace TurtleChallenge.Services
 
                 _turtleObservable.TrackTurtle(_board.turtle);
 
-                if (!_board.turtle.IsAlive())
+                if (!_board.turtle.IsTurtleAlive())
                     return;
             }
 
-            _board.turtle.TurtleState = new TurtleNoWayOutState();
+            _board.turtle.DidNotFoundExit();
             _printerService.Print(_board.turtle.TurtleState.Text());
         }
 

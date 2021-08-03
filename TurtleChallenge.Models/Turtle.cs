@@ -7,8 +7,6 @@ namespace TurtleChallenge.Models
     /// </summary>
     public class Turtle : Element
     {
-        public TurtleState GetLastElementState { get; set; } = new TurtleOkState();
-
         public Cell GetLastElementPosition { get; set; }
 
         public Dir GetLastDirection { get; set; }
@@ -21,7 +19,7 @@ namespace TurtleChallenge.Models
 
         public Dir Direction { get; set; }
 
-        public TurtleState TurtleState { get; set; }
+        public TurtleState TurtleState { get; private set; }
 
         private static Turtle _turtle;
 
@@ -32,12 +30,41 @@ namespace TurtleChallenge.Models
             InitialDirection = direction;
             GetLastDirection = direction;
             GetLastElementPosition = position;
-            GetLastElementState = new TurtleOkState();
         }
 
         public static Turtle GetInstance(Cell position, Dir direction)
         {
             return _turtle ?? (_turtle = new Turtle(position, direction));
+        }
+
+        public void SteppedOnMine()
+        {
+            TurtleState = new TurtleDeadState();
+        }
+
+        public void NearMine()
+        {
+            TurtleState = new TurtleDangerState();
+        }
+
+        public void OutOfBoard()
+        {
+            TurtleState = new TurtleOutOfBoundsState();
+        }
+
+        public void OnExit()
+        {
+            TurtleState = new TurtleExitState();
+        }
+
+        public void Ok()
+        {
+            TurtleState = new TurtleOkState();
+        }
+
+        public void DidNotFoundExit()
+        {
+            TurtleState = new TurtleNoWayOutState();
         }
 
         public void ResetTurtle()
@@ -47,9 +74,9 @@ namespace TurtleChallenge.Models
             TurtleState = new TurtleOkState();
         }
 
-        public bool IsAlive()
+        public bool IsTurtleAlive()
         {
-            return _turtle.GetLastElementState.GetType() == typeof(TurtleDangerState) || _turtle.GetLastElementState.GetType() == typeof(TurtleOkState);
+            return _turtle.TurtleState.GetType() == typeof(TurtleDangerState) || _turtle.TurtleState.GetType() == typeof(TurtleOkState);
         }
 
         /// <summary>

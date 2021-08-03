@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Threading;
 using TurtleChallenge.Models;
 
 namespace TurtleChallenge.Services
 {
     /// <summary>
     /// turtle observer service 
-    /// update method is called by the element it observes.
+    /// next method is called when a turtle action happens.
+    /// it is responsible to give new states to the turtle
     /// </summary>
     public class TurtleObserverService : IObserver<Turtle>
     {
@@ -24,17 +24,32 @@ namespace TurtleChallenge.Services
         /// <summary>
         /// Depending on the position of the element (turtle) a state will be returned
         /// </summary>
-        /// <param name="element"></param>
+        /// <param name="turtle"></param>
         /// <returns></returns>
-        private TurtleState CheckElementState(Element element)
+        private TurtleState GetNewTurtleState(Turtle turtle)
         {
-            if (IsExit(element)) return new TurtleExitState();
-            else if (IsDead(element)) return new TurtleDeadState();
-            else if (IsOutOfBounds(element)) return new TurtleOutOfBoundsState();
-            else if (IsDanger(element)) return new TurtleDangerState();
-            else if (IsDanger(element)) return new TurtleDangerState();
+            if (IsExit(turtle))
+            {
+                turtle.OnExit();
+            }
+            else if (IsDead(turtle))
+            {
+                turtle.SteppedOnMine();
+            }
+            else if (IsOutOfBounds(turtle))
+            {
+                turtle.OutOfBoard();
+            }
+            else if (IsDanger(turtle))
+            {
+                turtle.NearMine();
+            }
+            else
+            {
+                turtle.Ok();
+            }
 
-            return new TurtleOkState();
+            return turtle.TurtleState;
         }
 
         /// <summary>
@@ -117,9 +132,7 @@ namespace TurtleChallenge.Services
                 _board.turtle.GetLastElementPosition = value.Position;
             }
 
-            _board.turtle.GetLastElementState = CheckElementState(value);
-
-            _printerService.Print(_board.turtle.GetLastElementState.Text());
+            _printerService.Print(GetNewTurtleState(value).Text());
         }
 
         public virtual void Unsubscribe()
